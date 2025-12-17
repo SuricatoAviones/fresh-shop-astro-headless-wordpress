@@ -1,0 +1,33 @@
+---
+import type { ProductWithVariablePrice } from '@/types';
+import { formatCurrency, toLowerFirstChar } from '@/utils';
+import AddProductVariantButton from './AddProductVariantButton';
+interface Props {
+    product: ProductWithVariablePrice;
+}
+
+const { product } = Astro.props;
+const keys = ["small", "medium", "large"] as const;
+---
+
+<div class="mt-5 space-y-5 ">
+    {keys.map((key) => {
+        const variant = product.acf[key];
+        return (
+            <dl class="flex justify-between items-center text-lg font-black">
+                <dt class="textg-xl uppercase">{toLowerFirstChar(variant.size)}</dt>
+                <dd class="flex items-center gap-3">
+                    <span class="text-3xl text-amber-400">{formatCurrency(variant.price)}</span>
+                    <AddProductVariantButton  client:only="react"
+                    product={{
+                    id: product.id,
+                    title: product.title.rendered,
+                    price: Number(variant.price),
+                    size: variant.size,
+                    }}
+                    />
+                </dd>
+            </dl>
+        );
+    })}
+</div>

@@ -1,0 +1,24 @@
+---
+import { CategoriesSchema } from "@/types";
+import { currentPage } from "@/utils";
+
+const res = await fetch(`${import.meta.env.API_URL}/freshcoffee_categories`);
+const json = await res.json();
+const categories = CategoriesSchema.parse(json);
+
+const { category } = Astro.params;
+---
+
+<h2 class="text-xl my-5 ">Categorías</h2>
+
+<nav class="flex gap-5">
+    <a href="/admin/products" class=" bg-indigo-400 hover:bg-indigo-500 transition-colors p-2 text-white rounded">Ver Todos</a>
+    {categories.map(cat => (
+        <a
+        href={`/admin/products/${cat.slug}`}
+        class={`${currentPage(cat.slug, category!) ? 'bg-indigo-600' : 'bg-indigo-400'} hover:bg-indigo-500 transition-colors p-2 text-white rounded`}
+        >
+        {cat.name}
+        </a>
+    ))}
+</nav>

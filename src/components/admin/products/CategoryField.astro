@@ -1,0 +1,29 @@
+---
+import { CategoriesSchema } from "@/types";
+const res = await fetch(`${import.meta.env.API_URL}/freshcoffee_categories`);
+const json = await res.json();
+const categories = CategoriesSchema.parse(json);
+
+interface Props {
+  currentCategory? : number
+}
+const { currentCategory } = Astro.props;
+---
+
+<div class="col-span-full">
+  <label for="freshcoffee_category" class="block text-sm/6 font-medium text-gray-900">
+    Categoría Producto
+  </label>
+  <div class="mt-2">
+    <select
+      id="freshcoffee_category"
+      name="freshcoffee_category"
+      class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+    >
+      <option value="">Selecciona</option>
+      {categories.map((category) => (
+        <option value={category.id} selected={currentCategory === category.id}>{category.name}</option>
+      ))}
+    </select>
+  </div>
+</div>

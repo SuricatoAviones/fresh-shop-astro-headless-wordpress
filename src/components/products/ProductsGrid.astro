@@ -1,0 +1,21 @@
+---
+import { ProductsSchema } from "@/types";
+import ProductCard from "@/components/products/ProductCard.astro";
+import ShowOrderButton from "@/components/order/ShowOrderButton.tsx";
+const { category } = Astro.params;
+const url = `${import.meta.env.API_URL}/freshcoffee_products?freshcoffee_category_slug=${category}&per_page=20`;
+const res = await fetch(url);
+const json = await res.json();
+const products = ProductsSchema.parse(json);
+---
+
+<div class="flex justify-between items-center">
+  <h1 class="text-2xl my-10">Elige y Personaliza tu pedido a continuación</h1>
+
+  <ShowOrderButton client:load />
+</div>
+<div
+  class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 items-stretch"
+>
+  {products.map((product) => <ProductCard product={product} />)}
+</div>

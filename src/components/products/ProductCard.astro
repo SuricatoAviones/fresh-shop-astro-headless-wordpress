@@ -1,0 +1,44 @@
+---
+import { Picture } from "astro:assets";
+import type { Product, ProductWithVariablePrice } from "@/types";
+import { formatCurrency } from "@/utils";
+import PriceWithVariants from "./PriceWithVariants.astro";
+import AddProductButton from "./AddProductButton";
+interface Props {
+    product: Product;
+}
+const { product } = Astro.props;
+---
+
+<div class="border border-gray-200 ">
+    {product.featured_images ? (
+        <Picture src={product.featured_images.full.url} 
+            width={product.featured_images.full.width}
+            height={product.featured_images.full.height}
+            alt={`Imagen de ${product.title.rendered}`}
+            formats={['webp', 'avif']}
+        />
+    ) : (
+        <div class="bg-gray-200 aspect-square flex items-center justify-center">
+            <p class="text-gray-400 text-sm">Sin imagen</p>
+        </div>
+    )}
+
+    <div class="p-5">
+        <h3 class="text-2xl font-black h-20" set:html={product.title.rendered}></h3>
+        {product.acf.variable_price ? (
+            /* Se Cambia el Tipo de Product a ProductWithVariablePrice */
+            <PriceWithVariants product={product as ProductWithVariablePrice} />
+        ) : (
+            <p class="mt-5 font-black text-amber-400 text-4xl">{formatCurrency(product.acf.price)}</p>
+            <AddProductButton 
+                client:only="react"
+                product={{
+                    id: product.id,
+                    title: product.title.rendered,
+                    price: Number(product.acf.price),
+                }}
+            />
+        )}
+    </div>
+</div>

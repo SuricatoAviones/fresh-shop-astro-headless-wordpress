@@ -1,0 +1,27 @@
+---
+import AuthLayout from '../layouts/AuthLayout.astro';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<AuthLayout title="Comenzar Nueva Orden">
+    <button id="guest-login" class="border border-amber-400 hover:bg-amber-400 px-5 py-3 cursor-pointer rounded-lg mx-auto text-2xl uppercase font-black">
+        Presiona aqui
+    </button>
+</AuthLayout>
+
+<script>
+    import { actions } from "astro:actions"
+    import { navigate } from "astro:transitions/client"
+    const guestLoginbtn = document.querySelector("#guest-login")
+    if(guestLoginbtn){
+        guestLoginbtn.addEventListener("click", async function(e) {
+            e.preventDefault()
+            const {data,error} =await actions.auth.signInAsGuest()
+
+            if (data && !error) navigate('/order/coffee')
+
+        })
+    }
+</script>
